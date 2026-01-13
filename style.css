@@ -7,15 +7,14 @@ body {
 .chatbox {
     width: 450px;
     margin: 40px auto;
-    background: #FFF8E7; /* Soft cream */
+    background: #FFF8E7;
     border-radius: 12px;
-    padding: 0;
     box-shadow: 0 0 12px rgba(0,0,0,0.2);
 }
 
 /* Header */
 .chatbox h3 {
-    background: #D32F2F; /* Deep red */
+    background: #D32F2F;
     color: #FFFFFF;
     padding: 12px;
     margin: 0;
@@ -31,9 +30,9 @@ body {
     border-bottom: 1px solid #ccc;
 }
 
-/* Bot Message */
+/* Bot Messages */
 .bot {
-    background: #FF9800; /* Warm orange */
+    background: #FF9800;
     color: #FFFFFF;
     padding: 8px 12px;
     border-radius: 12px;
@@ -46,9 +45,9 @@ body {
     background: #F57C00;
 }
 
-/* User Message */
+/* User Messages */
 .user {
-    background: #4CAF50; /* Fresh green */
+    background: #4CAF50;
     color: #FFFFFF;
     padding: 8px 12px;
     border-radius: 12px;
@@ -62,15 +61,16 @@ body {
     background: #388E3C;
 }
 
-/* Special Messages */
+/* Command Messages */
 .command {
     background: #9C27B0;
-    color: white;
+    color: #FFFFFF;
 }
 
+/* Final Bill */
 .bill {
-    background: #2196F3; /* Blue bill */
-    color: white;
+    background: #2196F3;
+    color: #FFFFFF;
     font-weight: bold;
 }
 
@@ -95,7 +95,7 @@ button {
     margin-left: 6px;
     padding: 8px 14px;
     border: none;
-    background: #FFC107; /* Vibrant yellow */
+    background: #FFC107;
     color: #333333;
     border-radius: 6px;
     cursor: pointer;
