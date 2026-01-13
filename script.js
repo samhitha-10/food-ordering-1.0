@@ -2,74 +2,95 @@ const chatBox = document.getElementById("chatBox");
 
 let total = 0;
 let currentCategory = "";
+let currentItems = [];
 
 const menu = {
-    veg: {
-        "veg biryani": 180,
-        "veg meals": 150
-    },
-    nonveg: {
-        "chicken biryani": 220,
-        "mutton biryani": 280
-    },
-    drinks: {
-        "water": 20,
-        "coke": 50
-    },
-    chaat: {
-        "samosa chat": 60,
-        "pani puri": 50
-    },
-    desserts: {
-        "ice cream": 70,
-        "gulab jamun": 60
-    }
+    biryani: [
+        { name: "Chicken Biryani", price: 210 },
+        { name: "Mutton Biryani", price: 253 },
+        { name: "Veg Biryani", price: 154 },
+        { name: "Egg Biryani", price: 154 }
+    ],
+    starters: [
+        { name: "Chilli Chicken", price: 264 },
+        { name: "Pepper Chicken", price: 264 },
+        { name: "Paneer 65", price: 196 },
+        { name: "Veg Manchurian", price: 189 }
+    ],
+    southindian: [
+        { name: "Plain Dosa", price: 120 },
+        { name: "Masala Dosa", price: 145 },
+        { name: "Idli (3 pcs)", price: 110 },
+        { name: "Vada (3 pcs)", price: 120 }
+    ],
+    desserts: [
+        { name: "Ice Cream", price: 70 },
+        { name: "Gulab Jamun", price: 60 },
+        { name: "Fruit Salad", price: 80 }
+    ],
+    beverages: [
+        { name: "Tea", price: 30 },
+        { name: "Coffee", price: 40 },
+        { name: "Soft Drink", price: 50 },
+        { name: "Mineral Water", price: 20 }
+    ]
 };
 
-botMessage("Welcome to Food Order Bot 🍽️");
+botMessage("🍽️ Welcome to Food Order Bot");
 botMessage("Choose a category:");
-botMessage("Veg | NonVeg | Drinks | Chaat | Desserts");
+botMessage("Biryani | Starters | SouthIndian | Desserts | Beverages");
 botMessage("Type category name to continue");
 
 function sendMessage() {
     const input = document.getElementById("userInput");
     const text = input.value.trim().toLowerCase();
 
-    if (text === "") return;
+    if (!text) return;
     userMessage(text);
 
     // Show total
     if (text === "total") {
-        botMessage("Current total bill: ₹" + total);
+        botMessage("🧾 Current Bill: ₹" + total);
     }
 
-    // Finish order
+    // Finish
     else if (text === "done") {
-        botMessage("🧾 Final Bill: ₹" + total);
-        botMessage("Thank you for ordering 😊");
+        botMessage("✅ Final Bill: ₹" + total);
+        botMessage("Thank you! Visit again 😊");
         total = 0;
         currentCategory = "";
     }
 
-    // Category selection
+    // Category selected
     else if (menu[text]) {
         currentCategory = text;
-        let items = Object.keys(menu[text]).join(", ");
-        botMessage("Available items in " + text.toUpperCase() + ":");
-        botMessage(items);
-        botMessage("Please type your choice");
+        currentItems = menu[text];
+
+        let msg = `📋 ${text.toUpperCase()} MENU:\n`;
+        currentItems.forEach((item, index) => {
+            msg += `${index + 1}. ${item.name} – ₹${item.price}\n`;
+        });
+
+        botMessage(msg);
+        botMessage("👉 Enter item number to order");
     }
 
-    // Item selection
-    else if (currentCategory && menu[currentCategory][text]) {
-        total += menu[currentCategory][text];
-        botMessage(text + " added ✅ Price ₹" + menu[currentCategory][text]);
-        botMessage("Choose another category or type 'done'");
-        currentCategory = "";
+    // Item selected by number
+    else if (currentCategory && !isNaN(text)) {
+        let index = parseInt(text) - 1;
+
+        if (currentItems[index]) {
+            total += currentItems[index].price;
+            botMessage(`✅ ${currentItems[index].name} added – ₹${currentItems[index].price}`);
+            botMessage("Choose another category or type 'done'");
+            currentCategory = "";
+        } else {
+            botMessage("❌ Invalid item number");
+        }
     }
 
     else {
-        botMessage("Invalid choice ❌ Please select a valid category or item");
+        botMessage("❌ Invalid input. Try again");
     }
 
     input.value = "";
