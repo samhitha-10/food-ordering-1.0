@@ -61,10 +61,14 @@ body {
     background: #388E3C;
 }
 
-/* Command Messages */
+/* Command Messages (UPDATED TO BROWN) */
 .command {
-    background: #9C27B0;
+    background: #8D6E63;   /* Soft brown */
     color: #FFFFFF;
+}
+
+.command:hover {
+    background: #795548;   /* Darker brown */
 }
 
 /* Final Bill */
