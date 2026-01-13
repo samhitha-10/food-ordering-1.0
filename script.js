@@ -1,6 +1,6 @@
 const chat = document.getElementById("chat");
 
-/* 🔹 Categories in exact order */
+/* Categories in exact order */
 const categories = [
     { key: "beverages", label: "Beverages" },
     { key: "starters", label: "Starters" },
@@ -10,7 +10,7 @@ const categories = [
     { key: "special", label: "Special Thalis" }
 ];
 
-/* 🔹 Menu (UNCHANGED – exactly same as yours) */
+/* Full menu */
 const menu = {
     beverages: [
         { name: "Tea", price: 30 },
@@ -87,7 +87,7 @@ let currentCategory = "";
 let cart = [];
 let total = 0;
 
-/* 🔹 Message helpers */
+/* Message helpers */
 function bot(msg, cls = "bot") {
     chat.innerHTML += `<div class="${cls}">${msg}</div>`;
     chat.scrollTop = chat.scrollHeight;
@@ -97,10 +97,10 @@ function user(msg) {
     chat.innerHTML += `<div class="user">${msg}</div>`;
 }
 
-/* 🔹 Welcome */
+/* Welcome */
 bot("🍽 Welcome to Food Bot!<br>All are welcome 😊");
 
-/* 🔹 Show categories */
+/* Show categories */
 function showCategories() {
     let text = "<b>Select a category:</b><br>";
     categories.forEach((c, i) => {
@@ -112,7 +112,7 @@ function showCategories() {
 
 showCategories();
 
-/* 🔹 Send logic */
+/* Send function */
 function send() {
     const input = document.getElementById("input");
     const value = input.value.trim();
@@ -121,7 +121,6 @@ function send() {
     user(value);
     input.value = "";
 
-    /* Cancel last item */
     if (value.toLowerCase() === "cancel") {
         if (cart.length === 0) return bot("No items to cancel ❌", "command");
         const removed = cart.pop();
@@ -130,7 +129,6 @@ function send() {
         return;
     }
 
-    /* Clear order */
     if (value.toLowerCase() === "clear") {
         cart = [];
         total = 0;
@@ -138,7 +136,6 @@ function send() {
         return;
     }
 
-    /* Bill */
     if (value.toLowerCase() === "bill") {
         if (cart.length === 0) return bot("No items ordered ❌", "command");
 
@@ -153,7 +150,6 @@ function send() {
         return;
     }
 
-    /* Category selection */
     if (stage === "category") {
         const index = parseInt(value) - 1;
         if (categories[index]) {
@@ -166,7 +162,6 @@ function send() {
         return;
     }
 
-    /* Item selection */
     if (stage === "items") {
         if (value === "#") {
             stage = "category";
@@ -178,15 +173,14 @@ function send() {
         if (item) {
             cart.push(item);
             total += item.price;
-            bot(`✅ ${item.name} added (₹${item.price})<br>
-            Choose more items or press # to exit`);
+            bot(`✅ ${item.name} added (₹${item.price})<br>Choose more items or press # to exit`);
         } else {
             bot("Invalid item ❌", "command");
         }
     }
 }
 
-/* 🔹 Show items */
+/* Show items */
 function showItems() {
     let text = "Select item number (# to exit):<br>";
     menu[currentCategory].forEach((i, idx) => {
