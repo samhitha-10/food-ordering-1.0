@@ -3,59 +3,105 @@ body {
     background: #f2f2f2;
 }
 
+/* Chat Box */
 .chatbox {
     width: 450px;
     margin: 40px auto;
-    background: #fff;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    background: #FFF8E7; /* Soft cream */
+    border-radius: 12px;
+    padding: 0;
+    box-shadow: 0 0 12px rgba(0,0,0,0.2);
 }
 
+/* Header */
 .chatbox h3 {
+    background: #D32F2F; /* Deep red */
+    color: #FFFFFF;
+    padding: 12px;
+    margin: 0;
+    border-radius: 12px 12px 0 0;
     text-align: center;
 }
 
+/* Chat Area */
 .chat {
     height: 400px;
     overflow-y: auto;
-    border: 1px solid #ccc;
-    padding: 10px;
-    margin-bottom: 10px;
+    padding: 12px;
+    border-bottom: 1px solid #ccc;
 }
 
+/* Bot Message */
 .bot {
-    color: green;
+    background: #FF9800; /* Warm orange */
+    color: #FFFFFF;
+    padding: 8px 12px;
+    border-radius: 12px;
     margin: 6px 0;
+    width: fit-content;
+    max-width: 85%;
 }
 
+.bot:hover {
+    background: #F57C00;
+}
+
+/* User Message */
 .user {
-    color: blue;
+    background: #4CAF50; /* Fresh green */
+    color: #FFFFFF;
+    padding: 8px 12px;
+    border-radius: 12px;
     margin: 6px 0;
-    text-align: right;
+    width: fit-content;
+    max-width: 85%;
+    margin-left: auto;
 }
 
+.user:hover {
+    background: #388E3C;
+}
+
+/* Special Messages */
+.command {
+    background: #9C27B0;
+    color: white;
+}
+
+.bill {
+    background: #2196F3; /* Blue bill */
+    color: white;
+    font-weight: bold;
+}
+
+/* Input Area */
 .input-area {
     display: flex;
+    padding: 10px;
 }
 
 input {
     flex: 1;
     padding: 8px;
-    border-radius: 5px;
-    border: 1px solid #aaa;
+    border-radius: 6px;
+    border: none;
+    background: #F5F5F5;
+    color: #333333;
+    outline: none;
 }
 
+/* Send Button */
 button {
-    margin-left: 5px;
-    padding: 8px 12px;
+    margin-left: 6px;
+    padding: 8px 14px;
     border: none;
-    background: #28a745;
-    color: white;
-    border-radius: 5px;
+    background: #FFC107; /* Vibrant yellow */
+    color: #333333;
+    border-radius: 6px;
     cursor: pointer;
+    font-weight: bold;
 }
 
 button:hover {
-    background: #218838;
+    opacity: 0.9;
 }
