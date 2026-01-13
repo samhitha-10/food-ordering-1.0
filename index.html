@@ -1,179 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Food Ordering Chatbot</title>
-
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: #f4f4f4;
-}
-.chatbox {
-    width: 420px;
-    margin: 40px auto;
-    background: #fff;
-    border-radius: 10px;
-    padding: 15px;
-}
-.chat {
-    height: 380px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    padding: 10px;
-}
-.bot { color: green; margin: 6px 0; }
-.user { color: blue; margin: 6px 0; text-align: right; }
-input {
-    width: 78%;
-    padding: 8px;
-}
-button {
-    padding: 8px 12px;
-}
-</style>
+    <meta charset="UTF-8">
+    <title>Food Ordering Chatbot</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
 <div class="chatbox">
     <h3>🍽 Food Ordering Chatbot</h3>
     <div class="chat" id="chat"></div>
-    <input type="text" id="input" placeholder="Enter choice">
-    <button onclick="send()">Send</button>
+    <div class="input-area">
+        <input type="text" id="input" placeholder="Enter choice">
+        <button onclick="send()">Send</button>
+    </div>
 </div>
 
-<script>
-const chat = document.getElementById("chat");
-
-const menu = {
-    beverages: [
-        { name: "Tea", price: 30 },
-        { name: "Hot Coffee", price: 40 },
-        { name: "Cold Coffee", price: 55 },
-        { name: "Filter Coffee", price: 45 }
-    ],
-    starters: [
-        { name: "Veg Soup", price: 100 },
-        { name: "Chicken Soup", price: 120 },
-        { name: "Paneer 65", price: 196 }
-    ],
-    biryani: [
-        { name: "Chicken Biryani", price: 210 },
-        { name: "Prawns Biryani", price: 240 },
-        { name: "Veg Biryani", price: 154 }
-    ],
-    snacks: [
-        { name: "Veg Burger", price: 90 },
-        { name: "Chicken Burger", price: 120 },
-        { name: "French Fries", price: 80 }
-    ],
-    desserts: [
-        { name: "Ice Cream", price: 70 },
-        { name: "Chocolate Cake", price: 120 }
-    ]
-};
-
-let stage = "category";
-let currentCategory = "";
-let cart = [];
-let total = 0;
-
-function bot(msg) {
-    chat.innerHTML += `<div class="bot">${msg}</div>`;
-    chat.scrollTop = chat.scrollHeight;
-}
-function user(msg) {
-    chat.innerHTML += `<div class="user">${msg}</div>`;
-}
-
-bot(`Welcome 👋<br>
-1.Beverages  2.Starters  3.Biryani  4.Snacks  5.Desserts<br>
-Commands: bill | cancel | clear`);
-
-function send() {
-    const input = document.getElementById("input");
-    const value = input.value.trim().toLowerCase();
-    if (!value) return;
-    user(value);
-    input.value = "";
-
-    // 🔴 Cancel last item
-    if (value === "cancel") {
-        if (cart.length === 0) {
-            bot("No items to cancel ❌");
-        } else {
-            const removed = cart.pop();
-            total -= removed.price;
-            bot(`❌ ${removed.name} removed<br>Total: ₹${total}`);
-        }
-        return;
-    }
-
-    // 🔴 Clear full order
-    if (value === "clear") {
-        cart = [];
-        total = 0;
-        bot("🗑 Order cleared");
-        return;
-    }
-
-    // 🧾 Bill
-    if (value === "bill") {
-        if (cart.length === 0) {
-            bot("No items ordered yet ❌");
-            return;
-        }
-        let summary = "🧾 Order Summary:<br>";
-        cart.forEach(i => summary += `${i.name} - ₹${i.price}<br>`);
-        summary += `<b>Total = ₹${total}</b><br>Thank you 😊`;
-        bot(summary);
-        stage = "done";
-        return;
-    }
-
-    // 📂 Category selection
-    if (stage === "category") {
-        const cats = ["beverages","starters","biryani","snacks","desserts"];
-        const index = value - 1;
-        if (cats[index]) {
-            currentCategory = cats[index];
-            stage = "items";
-            showItems();
-        } else {
-            bot("Invalid category ❌");
-        }
-        return;
-    }
-
-    // 🍽 Item selection
-    if (stage === "items") {
-        if (value === "#") {
-            stage = "category";
-            bot(`Choose category:<br>
-1.Beverages 2.Starters 3.Biryani 4.Snacks 5.Desserts`);
-            return;
-        }
-        const item = menu[currentCategory][value - 1];
-        if (item) {
-            cart.push(item);
-            total += item.price;
-            bot(`✅ ${item.name} added (₹${item.price})<br>
-Add more or # to exit`);
-        } else {
-            bot("Invalid item ❌");
-        }
-    }
-}
-
-function showItems() {
-    let text = `Select items (# to exit)<br>`;
-    menu[currentCategory].forEach((i, idx) => {
-        text += `${idx + 1}. ${i.name} - ₹${i.price}<br>`;
-    });
-    bot(text);
-}
-</script>
-
+<script src="script.js"></script>
 </body>
 </html>
