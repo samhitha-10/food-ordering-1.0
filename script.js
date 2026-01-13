@@ -1,58 +1,75 @@
 const chatBox = document.getElementById("chatBox");
 
+let total = 0;
+let currentCategory = "";
+
 const menu = {
-    // Veg
-    "veg biryani": 180,
-    "veg meals": 150,
-    "paneer curry": 160,
-    "samosa chat": 60,
-
-    // Non-Veg
-    "chicken biryani": 220,
-    "mutton biryani": 280,
-    "chicken meals": 200,
-
-    // Drinks & Beverages
-    "water": 20,
-    "coke": 50,
-    "pepsi": 50,
-    "tea": 30,
-    "coffee": 40,
-
-    // Desserts
-    "ice cream": 70,
-    "gulab jamun": 60
+    veg: {
+        "veg biryani": 180,
+        "veg meals": 150
+    },
+    nonveg: {
+        "chicken biryani": 220,
+        "mutton biryani": 280
+    },
+    drinks: {
+        "water": 20,
+        "coke": 50
+    },
+    chaat: {
+        "samosa chat": 60,
+        "pani puri": 50
+    },
+    desserts: {
+        "ice cream": 70,
+        "gulab jamun": 60
+    }
 };
 
-let totalBill = 0;
-
 botMessage("Welcome to Food Order Bot 🍽️");
-botMessage("Categories: Veg, Non-Veg, Drinks, Chaat, Meals, Beverages, Desserts");
-botMessage("Type food name to order (example: chicken biryani)");
-botMessage("Type 'total' to see bill or 'done' to finish");
+botMessage("Choose a category:");
+botMessage("Veg | NonVeg | Drinks | Chaat | Desserts");
+botMessage("Type category name to continue");
 
 function sendMessage() {
     const input = document.getElementById("userInput");
     const text = input.value.trim().toLowerCase();
 
     if (text === "") return;
-
     userMessage(text);
 
-    if (text === "done") {
-        botMessage("🧾 Final Bill: ₹" + totalBill);
+    // Show total
+    if (text === "total") {
+        botMessage("Current total bill: ₹" + total);
+    }
+
+    // Finish order
+    else if (text === "done") {
+        botMessage("🧾 Final Bill: ₹" + total);
         botMessage("Thank you for ordering 😊");
-        totalBill = 0;
+        total = 0;
+        currentCategory = "";
     }
-    else if (text === "total") {
-        botMessage("Current total bill is ₹" + totalBill);
-    }
+
+    // Category selection
     else if (menu[text]) {
-        totalBill += menu[text];
-        botMessage(text + " added ✅ Price ₹" + menu[text]);
+        currentCategory = text;
+        let items = Object.keys(menu[text]).join(", ");
+        botMessage("Available items in " + text.toUpperCase() + ":");
+        botMessage(items);
+        botMessage("Please type your choice");
     }
+
+    // Item selection
+    else if (currentCategory && menu[currentCategory][text]) {
+        total += menu[currentCategory][text];
+        botMessage(text + " added ✅ Price ₹" + menu[currentCategory][text]);
+        botMessage("Choose another category or type 'done'");
+        currentCategory = "";
+    }
+
     else {
-        botMessage("Item not available ❌");
+        botMessage("Invalid choice ❌ Please select a valid category or item");
     }
 
     input.value = "";
