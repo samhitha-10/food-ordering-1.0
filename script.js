@@ -4,6 +4,8 @@ let total = 0;
 let currentCategory = "";
 let currentItems = [];
 
+const EXIT_SYMBOL = "#";
+
 const menu = {
     biryani: [
         { name: "Chicken Biryani", price: 210 },
@@ -25,8 +27,7 @@ const menu = {
     ],
     desserts: [
         { name: "Ice Cream", price: 70 },
-        { name: "Gulab Jamun", price: 60 },
-        { name: "Fruit Salad", price: 80 }
+        { name: "Gulab Jamun", price: 60 }
     ],
     beverages: [
         { name: "Tea", price: 30 },
@@ -39,7 +40,7 @@ const menu = {
 botMessage("🍽️ Welcome to Food Order Bot");
 botMessage("Choose a category:");
 botMessage("Biryani | Starters | SouthIndian | Desserts | Beverages");
-botMessage("Type category name to continue");
+botMessage("Type 'total' to view bill, 'done' to finish");
 
 function sendMessage() {
     const input = document.getElementById("userInput");
@@ -53,16 +54,23 @@ function sendMessage() {
         botMessage("🧾 Current Bill: ₹" + total);
     }
 
-    // Finish
+    // Finish order
     else if (text === "done") {
         botMessage("✅ Final Bill: ₹" + total);
-        botMessage("Thank you! Visit again 😊");
-        total = 0;
-        currentCategory = "";
+        botMessage("Thank you for ordering 😊");
+        resetOrder();
     }
 
-    // Category selected
-    else if (menu[text]) {
+    // Exit category using special symbol
+    else if (text === EXIT_SYMBOL && currentCategory) {
+        botMessage(`⬅️ Exited ${currentCategory.toUpperCase()} category`);
+        currentCategory = "";
+        currentItems = [];
+        botMessage("Choose another category or type 'done'");
+    }
+
+    // Category selection
+    else if (!currentCategory && menu[text]) {
         currentCategory = text;
         currentItems = menu[text];
 
@@ -70,30 +78,35 @@ function sendMessage() {
         currentItems.forEach((item, index) => {
             msg += `${index + 1}. ${item.name} – ₹${item.price}\n`;
         });
+        msg += `\n👉 Enter item number to add\n👉 Type '${EXIT_SYMBOL}' to exit category`;
 
         botMessage(msg);
-        botMessage("👉 Enter item number to order");
     }
 
-    // Item selected by number
+    // Item selection (multiple allowed)
     else if (currentCategory && !isNaN(text)) {
-        let index = parseInt(text) - 1;
+        const index = parseInt(text) - 1;
 
         if (currentItems[index]) {
             total += currentItems[index].price;
             botMessage(`✅ ${currentItems[index].name} added – ₹${currentItems[index].price}`);
-            botMessage("Choose another category or type 'done'");
-            currentCategory = "";
+            botMessage(`Add more items or type '${EXIT_SYMBOL}' to exit category`);
         } else {
             botMessage("❌ Invalid item number");
         }
     }
 
     else {
-        botMessage("❌ Invalid input. Try again");
+        botMessage("❌ Invalid input. Please try again");
     }
 
     input.value = "";
+}
+
+function resetOrder() {
+    total = 0;
+    currentCategory = "";
+    currentItems = [];
 }
 
 function userMessage(msg) {
