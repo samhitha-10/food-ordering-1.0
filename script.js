@@ -10,9 +10,8 @@ const categories = [
     { key: "special", label: "Special Thalis" }
 ];
 
-/* 🔹 Full menu exactly as given */
+/* 🔹 Menu (UNCHANGED – exactly same as yours) */
 const menu = {
-
     beverages: [
         { name: "Tea", price: 30 },
         { name: "Hot Coffee", price: 40 },
@@ -88,9 +87,9 @@ let currentCategory = "";
 let cart = [];
 let total = 0;
 
-/* 🔹 Chat functions */
-function bot(msg) {
-    chat.innerHTML += `<div class="bot">${msg}</div>`;
+/* 🔹 Message helpers */
+function bot(msg, cls = "bot") {
+    chat.innerHTML += `<div class="${cls}">${msg}</div>`;
     chat.scrollTop = chat.scrollHeight;
 }
 
@@ -98,84 +97,98 @@ function user(msg) {
     chat.innerHTML += `<div class="user">${msg}</div>`;
 }
 
-/* 🔹 Show categories in order */
+/* 🔹 Welcome */
+bot("🍽 Welcome to Food Bot!<br>All are welcome 😊");
+
+/* 🔹 Show categories */
 function showCategories() {
-    let text = "Choose a category:<br>";
+    let text = "<b>Select a category:</b><br>";
     categories.forEach((c, i) => {
         text += `${i + 1}. ${c.label}<br>`;
     });
-    text += "Commands: bill | cancel | clear";
-    bot(text);
+    text += "<br>Commands: <b>bill | cancel | clear</b>";
+    bot(text, "command");
 }
 
 showCategories();
 
-/* 🔹 Main send logic */
+/* 🔹 Send logic */
 function send() {
     const input = document.getElementById("input");
-    const value = input.value.trim().toLowerCase();
+    const value = input.value.trim();
     if (!value) return;
+
     user(value);
     input.value = "";
 
-    if (value === "cancel") {
-        if (cart.length === 0) return bot("No items to cancel ❌");
+    /* Cancel last item */
+    if (value.toLowerCase() === "cancel") {
+        if (cart.length === 0) return bot("No items to cancel ❌", "command");
         const removed = cart.pop();
         total -= removed.price;
-        bot(`❌ ${removed.name} removed<br>Total ₹${total}`);
+        bot(`❌ ${removed.name} removed<br>Total ₹${total}`, "command");
         return;
     }
 
-    if (value === "clear") {
+    /* Clear order */
+    if (value.toLowerCase() === "clear") {
         cart = [];
         total = 0;
-        bot("🗑 Order cleared");
+        bot("🗑 Order cleared", "command");
         return;
     }
 
-    if (value === "bill") {
-        if (cart.length === 0) return bot("No items ordered ❌");
-        let bill = "🧾 Order Summary:<br>";
+    /* Bill */
+    if (value.toLowerCase() === "bill") {
+        if (cart.length === 0) return bot("No items ordered ❌", "command");
+
+        let bill = "🧾 <b>Order Summary</b><br>";
         cart.forEach(i => bill += `${i.name} - ₹${i.price}<br>`);
-        bill += `<b>Total = ₹${total}</b><br>Thank you 😊`;
-        bot(bill);
+        bill += `<br><b>Total = ₹${total}</b><br><br>
+        Thank you for ordering 😊<br>
+        Have a good day, enjoy your meal!`;
+
+        bot(bill, "bill");
         stage = "done";
         return;
     }
 
+    /* Category selection */
     if (stage === "category") {
-        const index = value - 1;
+        const index = parseInt(value) - 1;
         if (categories[index]) {
             currentCategory = categories[index].key;
             stage = "items";
             showItems();
         } else {
-            bot("Invalid category ❌");
+            bot("Invalid category ❌", "command");
         }
         return;
     }
 
+    /* Item selection */
     if (stage === "items") {
         if (value === "#") {
             stage = "category";
             showCategories();
             return;
         }
-        const item = menu[currentCategory][value - 1];
+
+        const item = menu[currentCategory][parseInt(value) - 1];
         if (item) {
             cart.push(item);
             total += item.price;
             bot(`✅ ${item.name} added (₹${item.price})<br>
-Add more or # to exit`);
+            Choose more items or press # to exit`);
         } else {
-            bot("Invalid item ❌");
+            bot("Invalid item ❌", "command");
         }
     }
 }
 
-/* 🔹 Show items in order */
+/* 🔹 Show items */
 function showItems() {
-    let text = "Select item (# to exit):<br>";
+    let text = "Select item number (# to exit):<br>";
     menu[currentCategory].forEach((i, idx) => {
         text += `${idx + 1}. ${i.name} - ₹${i.price}<br>`;
     });
